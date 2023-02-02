@@ -25,7 +25,7 @@ app = Flask(__name__)
 def return_data():
     id = request.args.get('id')
     cnx = mysql.connector.connect(
-                host="rm-l4vtsmuu203976dh4qo.mysql.me-central-1.rds.aliyuncs.com",
+                host="rm-l4vtsmuu203976dh4.mysql.me-central-1.rds.aliyuncs.com",
                 user="admin_account",
                 password="Admin@2023",
                 database="mysql"
@@ -58,10 +58,12 @@ def return_data():
     distances = apartments.apply(lambda x: sklearn.metrics.pairwise.euclidean_distances([[x['latitute'], x['longitude'], x['capacity']]], [[cdt['latitute'], cdt['longitude'], cdt['family_members']]])[0][0], axis=1)
     # select the apartment with the minimum distance
     min_distance = np.argsort(distances)[::-1][:5]
+    urls = [ subprocess.run(["./ossutil64", "sign",f"oss://cdt-bucket/houses_cleaned/{apart}.jpg"], capture_output=True, text=True).stdout.split("\n\n")[0].replace('%',' ') for apart in min_distance ] 
     apartments = apartments.iloc[min_distance]
+    apartments['image'] = urls
     
     return apartments.to_dict(orient='records')
 
 
 if __name__ == '__main__':
-        app.run(host='127.0.0.1', port=80, debug=True)
+        app.run(host='0.0.0.0', port=80, debug=True)
