@@ -61,8 +61,8 @@ def return_data():
     urls = [ subprocess.run(["./ossutil64", "sign",f"oss://cdt-bucket/houses_cleaned/{apart}.jpg"], capture_output=True, text=True).stdout.split("\n\n")[0].replace('%',' ') for apart in min_distance ] 
     apartments = apartments.iloc[min_distance]
     apartments['image'] = urls
-    
-    return apartments.to_dict(orient='records')
+    apartments = apartments.to_dict(orient='records')
+    return {idx:value for idx,value in enumerate(apartments)}
 
 
 if __name__ == '__main__':
