@@ -3,6 +3,7 @@ from flask import Flask, request
 import numpy as np
 import pandas as pd
 import sklearn.metrics
+import subprocess
 
 apartment_columns = ['id',
  'coords',
